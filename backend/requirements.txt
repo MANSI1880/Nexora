@@ -9,3 +9,9 @@ langchain-community
 langchain-chroma
 pytest
 python-dotenv
+sqlalchemy
+asyncpg
+alembic
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
