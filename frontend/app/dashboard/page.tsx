@@ -1,98 +1,57 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { authApi } from '@/lib/auth';
 import Link from 'next/link';
 
 export default function DashboardPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-    }
-  }, [router]);
-
-  const handleLogout = () => {
-    authApi.logout();
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
-      {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-slate-900 text-white flex flex-col">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold">Nexora</h1>
-          <p className="text-sm text-slate-400 mt-1">IT Service Desk</p>
+    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="bg-white overflow-hidden shadow rounded-lg mb-8 border border-gray-200">
+        <div className="px-4 py-5 sm:p-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Nexora</h2>
+          <p className="text-gray-600 max-w-3xl">
+            This is your autonomous IT Service Desk. Nexora uses an advanced multi-agent AI system 
+            to automatically diagnose, resolve, and route IT requests using our enterprise knowledge base.
+          </p>
         </div>
-        
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/dashboard" className="flex items-center px-4 py-3 bg-slate-800 rounded-lg text-sm font-medium transition-colors">
-            Welcome
-          </Link>
-          <Link href="/dashboard/chat" className="flex items-center px-4 py-3 hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
-            AI IT Support
-          </Link>
-          <Link href="/dashboard/tickets" className="flex items-center px-4 py-3 hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
-            My Tickets
-          </Link>
-        </nav>
+      </div>
 
-        <div className="p-4 border-t border-slate-800">
-          <div className="flex items-center px-4 py-3 hover:bg-slate-800 rounded-lg cursor-pointer text-sm font-medium transition-colors">
-            <span>User Account</span>
-          </div>
-          <button 
-            onClick={handleLogout}
-            className="w-full text-left flex items-center px-4 py-3 hover:bg-slate-800 rounded-lg text-sm font-medium text-red-400 transition-colors mt-1"
-          >
-            Logout
-          </button>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 flex flex-col">
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-          </div>
-        </header>
-
-        <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6 h-full">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Nexora IT Service Desk</h2>
-            <p className="text-gray-600 mb-8 max-w-2xl">
-              Describe your IT problems conversationally to get AI-driven classification, 
-              troubleshooting, and automated actions through controlled tools.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">AI IT Support</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Interact with our LangGraph-powered AI agent to troubleshoot VPN, software, and hardware issues.
-                </p>
-                <Link href="/dashboard/chat" className="text-blue-600 font-medium text-sm hover:underline">
-                  Start Chat &rarr;
-                </Link>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Link href="/dashboard/chat" className="group block">
+          <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-200 h-full hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all">
+            <div className="px-4 py-5 sm:p-6">
+              <div className="flex items-center mb-4">
+                <div className="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                  <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </div>
+                <h3 className="ml-3 text-lg font-medium text-gray-900">Start Chat</h3>
               </div>
-              
-              <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">My Tickets</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  View, manage, and track the status of your IT support tickets.
-                </p>
-                <Link href="/dashboard/tickets" className="text-blue-600 font-medium text-sm hover:underline">
-                  View Tickets &rarr;
-                </Link>
-              </div>
+              <p className="text-sm text-gray-500 group-hover:text-gray-900">
+                Talk to the Nexora AI to resolve your IT issues immediately.
+              </p>
             </div>
           </div>
-        </div>
-      </main>
+        </Link>
+
+        <Link href="/dashboard/tickets" className="group block">
+          <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-200 h-full hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all">
+            <div className="px-4 py-5 sm:p-6">
+              <div className="flex items-center mb-4">
+                <div className="flex-shrink-0 bg-green-100 rounded-md p-3">
+                  <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <h3 className="ml-3 text-lg font-medium text-gray-900">View Tickets</h3>
+              </div>
+              <p className="text-sm text-gray-500 group-hover:text-gray-900">
+                Check the status of your active IT requests and history.
+              </p>
+            </div>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
