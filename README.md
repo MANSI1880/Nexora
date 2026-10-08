@@ -1,4 +1,4 @@
-# Nexora - Autonomous Multi-Agent AI IT Support Service Desk Agent
+## Nexora - Autonomous Multi-Agent AI IT Support Service Desk Agent
 
 ## Project Overview
 Nexora is an autonomous multi-agent AI IT Service Desk platform. It allows enterprise employees to describe IT problems conversationally, get AI-driven classification, troubleshooting via a RAG knowledge base, and automated actions through controlled tools.
