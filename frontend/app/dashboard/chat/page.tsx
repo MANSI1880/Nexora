@@ -59,7 +59,7 @@ export default function ChatPage() {
       };
 
       setMessages((prev) => [...prev, aiMessage]);
-    } catch (err) {
+    } catch {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'ai',
