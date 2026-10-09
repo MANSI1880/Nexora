@@ -2,7 +2,7 @@ import os
 from typing import Dict, Any
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_chroma import Chroma
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -11,8 +11,9 @@ KNOWLEDGE_BASE_DIR = "../knowledge-base"
 
 def init_vector_store():
     """Initializes the vector store from markdown files."""
-    embeddings = OpenAIEmbeddings(
-        api_key=os.environ.get("OPENAI_API_KEY", "dummy_key")
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/gemini-embedding-2",
+        google_api_key=os.environ.get("GEMINI_API_KEY", "dummy_key")
     )
     
     # For MVP, we load documents on the fly if directory is empty
@@ -34,7 +35,7 @@ def init_vector_store():
     vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
     return vectorstore
 
-def get_rag_answer(query: str, intent: str, llm: ChatOpenAI) -> Dict[str, Any]:
+def get_rag_answer(query: str, intent: str, llm: ChatGoogleGenerativeAI) -> Dict[str, Any]:
     vectorstore = init_vector_store()
     
     if not vectorstore:

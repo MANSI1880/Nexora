@@ -12,6 +12,10 @@ __pycache__/
 .env
 .env.*
 !.env.example
+!.env.*.example
+
+# Python secrets and local configuration
+secrets/
 .venv/
 env/
 venv/
