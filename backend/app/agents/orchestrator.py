@@ -1,16 +1,16 @@
 import os
 from langgraph.graph import StateGraph, END
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.agents.state import AgentState
 from app.agents.router import route_intent
 from app.rag.retriever import get_rag_answer
 
 def get_llm():
-    return ChatOpenAI(
-        model="gpt-4o-mini",
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
         temperature=0,
-        api_key=os.environ.get("OPENAI_API_KEY", "dummy_key")
+        google_api_key=os.environ.get("GEMINI_API_KEY", "dummy_key")
     )
 
 def router_node(state: AgentState):
