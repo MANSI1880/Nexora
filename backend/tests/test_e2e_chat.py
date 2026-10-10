@@ -9,7 +9,7 @@ from app.main import app
 
 @pytest_asyncio.fixture
 async def async_client():
-    async with AsyncClient(base_url="http://127.0.0.1:8000", timeout=30.0) as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test", timeout=30.0) as ac:
         yield ac
 
 @pytest_asyncio.fixture

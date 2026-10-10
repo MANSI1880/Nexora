@@ -4,7 +4,7 @@ from app.agents.orchestrator import process_chat_request
 from app.schemas.chat import ChatResponse
 
 @patch("app.agents.orchestrator.route_intent")
-@patch("app.agents.orchestrator.ChatOpenAI")
+@patch("app.agents.orchestrator.ChatGoogleGenerativeAI")
 @patch("app.rag.retriever.init_vector_store")
 def test_vpn_request(mock_init_vs, mock_llm_orch, mock_route_intent):
     # Mock Router
@@ -18,11 +18,10 @@ def test_vpn_request(mock_init_vs, mock_llm_orch, mock_route_intent):
     mock_vs.as_retriever.return_value.invoke.return_value = [mock_doc]
     mock_init_vs.return_value = mock_vs
     
-    mock_llm_orch_instance = MagicMock()
-    mock_result = MagicMock()
-    mock_result.content = "To fix VPN, restart Cisco AnyConnect."
-    mock_llm_orch_instance.return_value = mock_result
-    mock_llm_orch.return_value = mock_llm_orch_instance
+    from langchain_core.messages import AIMessage
+    mock_msg = AIMessage(content="To fix VPN, restart Cisco AnyConnect.")
+    mock_llm_orch.return_value.invoke.return_value = mock_msg
+    mock_llm_orch.return_value.return_value = mock_msg
 
     result = process_chat_request("My VPN is not working")
     
