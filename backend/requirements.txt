@@ -15,3 +15,5 @@ alembic
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
+pytest-asyncio
+email-validator
