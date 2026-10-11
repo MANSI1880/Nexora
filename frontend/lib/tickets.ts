@@ -20,5 +20,15 @@ export const ticketsApi = {
   update: async (id: string | number, data: TicketUpdate): Promise<TicketResponse> => {
     const response = await apiClient.put<TicketResponse>(`/api/tickets/${id}`, data);
     return response.data;
+  },
+
+  approve: async (id: string | number): Promise<TicketResponse> => {
+    const response = await apiClient.post<TicketResponse>(`/api/tickets/${id}/approve`);
+    return response.data;
+  },
+
+  reject: async (id: string | number): Promise<TicketResponse> => {
+    const response = await apiClient.post<TicketResponse>(`/api/tickets/${id}/reject`);
+    return response.data;
   }
 };

@@ -29,13 +29,29 @@ export default function TicketsPage() {
     fetchTickets();
   }, []);
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): 'blue' | 'yellow' | 'green' | 'red' | 'gray' | 'purple' => {
     switch (status.toUpperCase()) {
       case 'OPEN': return 'blue';
       case 'IN_PROGRESS': return 'yellow';
+      case 'PENDING_APPROVAL': return 'purple';
+      case 'APPROVED': return 'green';
       case 'RESOLVED': return 'green';
+      case 'REJECTED': return 'red';
       case 'CLOSED': return 'gray';
       default: return 'gray';
+    }
+  };
+
+  const formatStatus = (status: string): string => {
+    switch (status.toUpperCase()) {
+      case 'PENDING_APPROVAL': return 'Pending Approval';
+      case 'IN_PROGRESS': return 'In Progress';
+      case 'OPEN': return 'Open';
+      case 'APPROVED': return 'Approved';
+      case 'REJECTED': return 'Rejected';
+      case 'RESOLVED': return 'Resolved';
+      case 'CLOSED': return 'Closed';
+      default: return status;
     }
   };
 
@@ -90,7 +106,7 @@ export default function TicketsPage() {
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium text-blue-600 truncate">{ticket.title}</p>
                       <div className="ml-2 flex-shrink-0 flex">
-                        <Badge color={getStatusColor(ticket.status)}>{ticket.status}</Badge>
+                        <Badge color={getStatusColor(ticket.status)}>{formatStatus(ticket.status)}</Badge>
                       </div>
                     </div>
                     <div className="mt-2 sm:flex sm:justify-between">

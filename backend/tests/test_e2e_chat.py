@@ -62,6 +62,7 @@ async def test_explicit_laptop_request_ticket(async_client, auth_user):
     )
     assert ticket_resp.status_code == 200
     assert ticket_resp.json()["id"] == int(data["ticket_id"])
+    assert ticket_resp.json()["status"] == "PENDING_APPROVAL"
 
 @pytest.mark.asyncio
 async def test_general_it_question_no_ticket(async_client, auth_user):
