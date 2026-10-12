@@ -1,5 +1,6 @@
 import os
-from typing import Dict, Any
+from pathlib import Path
+from typing import Dict, Any, Optional
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_chroma import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
@@ -7,18 +8,47 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 VECTOR_STORE_DIR = "./chroma_db"
-KNOWLEDGE_BASE_DIR = "../knowledge-base"
 
-def init_vector_store():
+def get_knowledge_base_dir() -> str:
+    """Resolves the knowledge base directory robustly across environments."""
+    env_dir = os.environ.get("KNOWLEDGE_BASE_DIR")
+    if env_dir and os.path.isdir(env_dir):
+        return os.path.abspath(env_dir)
+
+    rag_dir = Path(__file__).resolve().parent
+
+    # 1. Standard repo structure: <repo_root>/knowledge-base (parents[2] from app/rag)
+    repo_kb = rag_dir.parents[2] / "knowledge-base"
+    if repo_kb.is_dir():
+        return str(repo_kb)
+
+    # 2. Container/package structure: backend/knowledge-base
+    backend_kb = rag_dir.parents[1] / "knowledge-base"
+    if backend_kb.is_dir():
+        return str(backend_kb)
+
+    # 3. Relative to current working directory
+    cwd_kb = Path.cwd() / "knowledge-base"
+    if cwd_kb.is_dir():
+        return str(cwd_kb)
+
+    cwd_parent_kb = Path.cwd().parent / "knowledge-base"
+    if cwd_parent_kb.is_dir():
+        return str(cwd_parent_kb)
+
+    return str(repo_kb)
+
+KNOWLEDGE_BASE_DIR = get_knowledge_base_dir()
+
+def init_vector_store(kb_dir: Optional[str] = None):
     """Initializes the vector store from markdown files."""
     embeddings = GoogleGenerativeAIEmbeddings(
         model="models/gemini-embedding-2",
         google_api_key=os.environ.get("GEMINI_API_KEY", "dummy_key")
     )
-    
-    # For MVP, we load documents on the fly if directory is empty
-    # In production, this would be a separate ingestion pipeline
-    loader = DirectoryLoader(KNOWLEDGE_BASE_DIR, glob="**/*.md", loader_cls=TextLoader)
+
+    target_dir = kb_dir or get_knowledge_base_dir()
+    loader = DirectoryLoader(target_dir, glob="**/*.md", loader_cls=TextLoader)
     try:
         documents = loader.load()
     except Exception:
