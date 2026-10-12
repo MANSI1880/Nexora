@@ -1,10 +1,17 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth import router as auth_router
 from app.api.tickets import router as tickets_router
 from app.api.chat import router as chat_router
+from app.auth.jwt import validate_jwt_secret
 
-app = FastAPI(title="Nexora API")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    validate_jwt_secret()
+    yield
+
+app = FastAPI(title="Nexora API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

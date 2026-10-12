@@ -7,7 +7,7 @@ import time
 from fastapi import APIRouter, Depends
 
 from app.main import app
-from app.auth.jwt import create_access_token
+from app.auth.jwt import create_access_token, validate_jwt_secret
 from app.auth.dependencies import get_current_user, require_role
 from app.models.user import User
 from app.database.connection import get_db
@@ -171,3 +171,15 @@ async def test_user_role_denied_for_admin_route(async_client):
     )
     assert response.status_code == 403
 
+
+def test_jwt_secret_production_validation():
+    with pytest.raises(ValueError, match="JWT_SECRET must be set to a secure secret in production"):
+        validate_jwt_secret("change-me", "production")
+    with pytest.raises(ValueError, match="JWT_SECRET must be set to a secure secret in production"):
+        validate_jwt_secret("", "production")
+
+
+def test_jwt_secret_development_allowed():
+    assert validate_jwt_secret("change-me", "development") is True
+    assert validate_jwt_secret("change-me", "dev") is True
+    assert validate_jwt_secret("custom-prod-secret", "production") is True

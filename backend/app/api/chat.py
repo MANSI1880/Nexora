@@ -28,11 +28,12 @@ async def chat_endpoint(
         title = f"Request: {ai_result.get('intent', 'general')}"
         description = f"User message: {request.message}\nAction: {ai_result.get('action')}\nAI Response: {ai_result.get('response')}"
         
+        initial_status = "PENDING_APPROVAL" if ai_result.get("status") == "pending_approval" else "OPEN"
         ticket_in = TicketCreate(title=title, description=description, priority="MEDIUM")
-        new_ticket = await ticket_service.create_ticket(db, ticket_in, current_user.id)
+        new_ticket = await ticket_service.create_ticket(db, ticket_in, current_user.id, status=initial_status)
         
         # Log specifically for AI creation
-        await ticket_service.create_audit_log(db, "ai_ticket_created", current_user.id, f"AI created ticket {new_ticket.id}")
+        await ticket_service.create_audit_log(db, "ai_ticket_created", current_user.id, f"AI created ticket {new_ticket.id} with status {initial_status}")
         await db.commit()
         
         ai_result["ticket_id"] = str(new_ticket.id)

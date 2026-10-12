@@ -74,7 +74,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
         
-    access_token = create_access_token(data={"sub": user.username})
+    access_token = create_access_token(data={"sub": user.username, "role": user.role})
     
     await create_audit_log(db, "successful_login", user_id=user.id, details=f"User {user.username} logged in.")
     
